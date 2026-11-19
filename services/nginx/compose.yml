@@ -1,0 +1,3 @@
+volumes:
+  - /opt/ai/data/nginx:/usr/share/nginx/html:ro
+  
