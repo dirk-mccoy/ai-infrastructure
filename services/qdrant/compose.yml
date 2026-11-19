@@ -1,0 +1,16 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "6333:6333" # REST
+      - "6334:6334" # gRPC
+    volumes:
+      - /opt/ai/data/qdrant:/qdrant/storage
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    external: true
+    
