@@ -12,7 +12,17 @@ services:
       - ai-network
 
     environment:
-      OLLAMA_BASE_URL: "http://ollama:11434"
+      OLLAMA_BASE_URL: http://ollama:11434
+      VECTOR_DB: qdrant
+      QDRANT_URI: http://qdrant:6333
+      RAG_EMBEDDING_ENGINE: ollama
+      RAG_EMBEDDING_MODEL: nomic-embed-text
+
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 524288
+
 
 networks:
   ai-network:
