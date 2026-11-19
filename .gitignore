@@ -1,0 +1,19 @@
+# Persistent storage
+/models/
+/data/
+/backups/
+
+# Credentials and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# Python
+__pycache__/
+.venv/
+
+# Editor files
+.vscode/
