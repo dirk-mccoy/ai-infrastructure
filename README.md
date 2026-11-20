@@ -85,6 +85,39 @@ Base URL: `http://qdrant:6333`
 - Authentication: Disabled by default
 - External access: Enabled
 
+### Docling — Document Processing and Extraction
+
+Docling provides document conversion, OCR, layout analysis,
+and structured text extraction for the RAG ingestion pipeline.
+
+- Processes scanned and digitally generated PDFs.
+- Preserves document structure, headings, and tables.
+- Converts documents into structured Markdown.
+- Provides OCR for image-based documents.
+- Integrates directly with Open WebUI's document extraction engine.
+- Operates independently of inference and embedding services.
+
+| Configuration | Value |
+|---|---|
+| Container | docling |
+| Port | 5001 |
+| Internal Endpoint | http://docling:5001 |
+| Web Interface | http://localhost:5001/ui |
+| API Documentation | http://localhost:5001/docs |
+| Network | ai-network |
+
+#### Deployment
+
+    cd /opt/ai/services/docling
+    docker compose up -d
+
+#### Open WebUI Integration
+
+Navigate to Admin Settings > Documents and configure:
+
+- Content Extraction Engine: Docling
+- Docling Server URL: http://docling:5001
+
 ## SearXNG — Web Search Service
 
 SearXNG is a self-hosted, open-source metasearch engine
