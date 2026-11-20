@@ -9,8 +9,8 @@ services:
       SEARXNG_DEFAULT_PAGE_LEN: "5"
       UWSGI_THREADS: "3"
     volumes:
-      - ./searxng/config:/etc/searxng
-      - ./searxng/cache:/var/cache/searxng
+      - /opt/ai/data/searxng/config:/etc/searxng
+      - /opt/ai/data/searxng/cache:/var/cache/searxng
     networks:
       - ai-network
     

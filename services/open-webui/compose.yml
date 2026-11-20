@@ -23,6 +23,11 @@ services:
         soft: 65536
         hard: 524288
 
+    search:
+      formats:
+        - html
+        - json
+
 
 networks:
   ai-network:
