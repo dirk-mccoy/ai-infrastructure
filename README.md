@@ -84,3 +84,139 @@ Base URL: `http://qdrant:6333`
 - Distance metric: Configured per collection
 - Authentication: Disabled by default
 - External access: Enabled
+
+## SearXNG — Web Search Service
+
+SearXNG is a self-hosted, open-source metasearch engine
+that aggregates results from multiple upstream search
+providers.
+
+It provides centralized web search capabilities for
+Open WebUI, AI agents, custom applications, and
+conventional browser-based searches.
+
+### Service Configuration
+
+| Parameter | Value |
+|---|---|
+| Container | searxng |
+| Image | searxng/searxng:latest |
+| Docker Network | ai-network |
+| Host Port | 8088 |
+| Container Port | 8080 |
+| GPU Required | No |
+| External Database Required | No |
+| Authentication | None by default |
+
+### Endpoints
+
+| Service | Endpoint |
+|---|---|
+| Web Interface | http://localhost:8088 |
+| Internal Docker API | http://searxng:8080/search |
+| Host API | http://localhost:8088/search |
+| Preferences | http://localhost:8088/preferences |
+
+### Persistent Storage
+
+Proposed directory structure:
+
+/opt/ai/data/searxng/
+├── config/
+└── cache/
+
+| Host Directory | Container Directory |
+|---|---|
+| /opt/ai/data/searxng/config | /etc/searxng |
+| /opt/ai/data/searxng/cache | /var/cache/searxng |
+
+SearXNG does not maintain its own web index.
+Persistent storage is primarily used for configuration
+and cached runtime resources.
+
+### JSON API Configuration
+
+Enable JSON output in settings.yml:
+
+```yaml
+search:
+  formats:
+    - html
+    - json
+```
+
+Restart the container after modifying configuration:
+
+```bash
+docker restart searxng
+```
+
+### API Testing
+
+Test search functionality from the host:
+
+```bash
+curl -s "http://localhost:8088/search?q=NVIDIA+GB10&format=json" | jq
+```
+
+Return only search result titles and URLs:
+
+```bash
+curl -s "http://localhost:8088/search?q=NVIDIA+GB10&format=json" \
+  | jq '.results[] | {title, url}'
+```
+
+Test connectivity from Open WebUI:
+
+```bash
+docker exec open-webui curl -s \
+  "http://searxng:8080/search?q=NVIDIA+GB10&format=json"
+```
+
+### Open WebUI Integration
+
+Navigate to Admin Settings > Web Search.
+
+| Parameter | Value |
+|---|---|
+| Web Search | Enabled |
+| Search Engine | searxng |
+| Query URL | http://searxng:8080/search?q=<query> |
+| Search Result Count | 5 |
+| Concurrent Requests | 3 |
+
+### Browser Integration
+
+SearXNG can also be used as a conventional browser
+search engine independently of the AI infrastructure.
+
+Custom browser search URL:
+
+http://<GB10-IP>:8088/search?q=%s
+
+### Operational Commands
+
+```bash
+docker logs -f searxng
+docker restart searxng
+docker stop searxng
+docker start searxng
+docker stats searxng
+```
+
+### Architectural Role
+
+- External information retrieval for LLMs
+- Web search API for custom AI agents
+- Centralized search provider configuration
+- Independent network-wide browser search service
+- No commercial API subscription required
+
+### Limitations
+
+- Requires internet connectivity.
+- Upstream providers may throttle or block requests.
+- Search queries are transmitted to upstream providers.
+- Full webpage extraction is a separate operation.
+- Service should not be exposed publicly without
+  appropriate access controls.
